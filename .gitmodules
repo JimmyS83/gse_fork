@@ -11,12 +11,12 @@
 [submodule "third-party/common/win"]
   path = third-party/common/win
   url = ./
-  branch = third-party/common/win
+	branch = third-party/common/win
 
 [submodule "third-party/common/linux"]
   path = third-party/common/linux
   url = ./
-  branch = third-party/common/linux
+	branch = third-party/common/linux
 
 [submodule "third-party/deps/win"]
   path = third-party/deps/win
@@ -31,4 +31,10 @@
 [submodule "third-party/deps/common"]
   path = third-party/deps/common
   url = ./
-  branch = third-party/deps/common
+	branch = third-party/deps/common
+[submodule "third-party/deps/common/third-party/build/win"] 
+    path = third-party/deps/common/third-party/build/win 
+    url = D:/Prace/GIT/gse_fork/third-party/build/win 
+[submodule "third-party/deps/common/third-party/common/win"] 
+    path = third-party/deps/common/third-party/common/win 
+    url = D:/Prace/GIT/gse_fork/third-party/common/win 
