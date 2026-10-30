@@ -55,13 +55,26 @@ set /a "GEN_PROJECT=1"
     goto :end_script_with_err
   )
 
-  :: check msbuild
+  :: check msbuild (Visual Studio 2022 = 17.x only)
+  :: note: vswhere is called without quotes around its path on purpose, a command
+  :: starting with a quote and containing more quotes gets mangled by "for /f"
   set "MSBUILD_EXE="
-  for /f "tokens=* delims=" %%A in ('"%VSWHERE_EXE%" -prerelease -latest -nocolor -nologo -property installationPath 2^>nul') do (
+  set "VS_RANGE=[17.0,18.0)"
+  for /f "tokens=* delims=" %%A in ('%VSWHERE_EXE% -products * -prerelease -latest -version "%VS_RANGE%" -nocolor -nologo -property installationPath 2^>nul') do (
     set "MSBUILD_EXE=%%~A\MSBuild\Current\Bin\MSBuild.exe"
   )
-  if not exist "%MSBUILD_EXE%" (
-    1>&2 echo:MSBuild wasn't found
+
+  :: fallback: any installed instance with "\2022\" in its path (custom install dirs)
+  if not exist "!MSBUILD_EXE!" (
+    for /f "tokens=* delims=" %%A in ('%VSWHERE_EXE% -all -prerelease -products * -nocolor -nologo -property installationPath 2^>nul') do (
+      set "VS_DIR=%%~A"
+      if not "!VS_DIR:\2022\=!"=="!VS_DIR!" if exist "%%~A\MSBuild\Current\Bin\MSBuild.exe" set "MSBUILD_EXE=%%~A\MSBuild\Current\Bin\MSBuild.exe"
+    )
+  )
+
+  if not exist "!MSBUILD_EXE!" (
+    1>&2 echo:MSBuild from Visual Studio 2022 wasn't found, installed instances:
+    1>&2 %VSWHERE_EXE% -all -prerelease -products * -nologo -property installationPath
     goto :end_script_with_err
   )
 
@@ -75,7 +88,8 @@ set /a "GEN_PROJECT=1"
 :gen_project_end
 
   :: check .sln
-  set "SLN_FILE=build\project\vs2022\win\gbe.sln"
+  set "SLN_FILE="
+  for %%F in ("build\project\vs2022\win\*.sln") do set "SLN_FILE=%%~F"
   if not exist "%SLN_FILE%" (
     1>&2 echo:.sln file wasn't found
     goto :end_script_with_err
