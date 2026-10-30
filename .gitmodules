@@ -32,3 +32,9 @@
   path = third-party/deps/common
   url = ./
 	branch = third-party/deps/common
+[submodule "third-party/deps/common/third-party/build/win"] 
+    path = third-party/deps/common/third-party/build/win 
+    url = D:/Prace/GIT/gse_fork/third-party/build/win 
+[submodule "third-party/deps/common/third-party/common/win"] 
+    path = third-party/deps/common/third-party/common/win 
+    url = D:/Prace/GIT/gse_fork/third-party/common/win 
